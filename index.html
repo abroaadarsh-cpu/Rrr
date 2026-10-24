@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GBHS Gabber Massan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&family=Nunito+Sans:wght@400;600;700&family=Noto+Naskh+Arabic:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0a2a4f;--navy2:#082342;--blue:#1d4ea8;--gold:#f7c600;--ink:#1b2a41;--muted:#66758a;--bg:#f3f6fb;--line:#dde4ee;--card:#fff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.6 'Nunito Sans','Noto Naskh Arabic',system-ui,sans-serif}
+h1,h2,h3,h4{font-family:'Merriweather','Noto Naskh Arabic',serif;line-height:1.25;margin:0}
+a{color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+.muted{color:var(--muted)}
+
+/* header */
+.hd{background:var(--navy);color:#fff}
+.hdin{display:flex;gap:20px;align-items:center;justify-content:space-between;padding-top:14px;padding-bottom:14px;flex-wrap:wrap}
+.id{display:flex;gap:14px;align-items:center;text-decoration:none}
+.id h1{font-size:clamp(1.4rem,4vw,2.2rem);font-weight:900}
+.id .sub{font-size:1.15rem;font-weight:600}
+.id .tag{font-style:italic;color:#c9d6ea;font-size:.95rem}
+.info{list-style:none;margin:0;padding:0;display:flex;gap:22px;flex-wrap:wrap;font-size:.88rem}
+.info li{display:flex;gap:8px;align-items:center}
+.admin{background:var(--gold);color:#3b2f00;padding:8px 0;font-size:.92rem}
+.admin .wrap{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.admin b{margin-inline-end:6px}
+.admin button{border:1px solid #3b2f00;background:#fff7cc;border-radius:6px;padding:4px 10px;cursor:pointer;font-weight:600}
+
+/* nav */
+.nav{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:30}
+.navin{display:flex;align-items:center;gap:10px;min-height:54px}
+#burger{display:none;border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 12px;font-size:1.2rem;cursor:pointer}
+.menu{list-style:none;margin:0;padding:0;display:flex;gap:2px;flex:1;flex-wrap:wrap}
+.menu>li{position:relative}
+.menu>li>a,.menu>li>button{display:block;border:0;background:none;padding:12px 12px;font-weight:600;cursor:pointer;text-decoration:none;border-radius:6px;white-space:nowrap}
+.menu>li>a.on,.menu>li>button.on{background:var(--blue);color:#fff}
+.menu>li>button::after{content:" ▾";font-size:.75em;opacity:.7}
+.sub{display:none;position:absolute;top:100%;inset-inline-start:0;min-width:190px;background:#fff;border:1px solid var(--line);border-radius:8px;box-shadow:0 10px 30px rgba(10,42,79,.15);list-style:none;margin:0;padding:6px;z-index:40}
+.menu li.open .sub{display:block}
+.sub a{display:block;padding:8px 12px;border-radius:6px;text-decoration:none}
+.sub a:hover{background:var(--bg)}
+#sform input{padding:8px 12px;border:1px solid var(--line);border-radius:8px;width:190px;background:#fff}
+
+/* hero */
+.hero{position:relative;min-height:380px;overflow:hidden;background:var(--navy2);color:#fff;display:flex;align-items:center}
+.slide{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity .8s}
+.slide.on{opacity:1}
+.slide.ph{background:linear-gradient(135deg,#0a2a4f,#1d4ea8 60%,#0a2a4f)}
+.shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(5,20,40,.82),rgba(5,20,40,.35) 60%,rgba(5,20,40,.1))}
+.hc{position:relative;padding-top:48px;padding-bottom:48px}
+.hc .w{font:700 1.9rem 'Merriweather',serif;margin:0}
+.hc h2{font-size:clamp(2rem,6vw,3.6rem);font-weight:900}
+.hc h3{color:var(--gold);font-size:clamp(1.3rem,3.5vw,2rem);margin:6px 0 12px}
+.hc p.t{max-width:520px;font-size:1.1rem;margin:0 0 20px}
+.gold{display:inline-block;background:var(--gold);color:#2a2100;font-weight:700;padding:12px 22px;border-radius:6px;text-decoration:none;border:0;cursor:pointer}
+.arrow{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:0;background:rgba(0,0,0,.45);color:#fff;font-size:1.4rem;cursor:pointer;z-index:2}
+.arrow.l{inset-inline-start:10px}.arrow.r{inset-inline-end:10px}
+.dots{position:absolute;bottom:12px;left:0;right:0;display:flex;gap:8px;justify-content:center;z-index:2}
+.dots i{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.5)}
+.dots i.on{background:#fff}
+
+/* features */
+.feat{background:#fff;border-bottom:1px solid var(--line)}
+.feat .wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;padding-top:18px;padding-bottom:18px}
+.f{text-align:center;padding:6px}
+.f .c{width:62px;height:62px;border-radius:50%;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;color:#fff}
+.f b{display:block;color:var(--navy)}.f span{font-size:.9rem;color:var(--muted)}
+
+/* layout */
+.cols{display:grid;grid-template-columns:1.2fr 1.2fr .8fr;gap:26px;padding:26px 0}
+.cols2{display:grid;grid-template-columns:1fr 1fr;gap:26px;padding:0 0 26px}
+@media(max-width:900px){.cols,.cols2{grid-template-columns:1fr}}
+.sec h2{color:var(--navy);font-size:1.5rem;margin-bottom:12px;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.sec h2 a{font:600 .85rem 'Nunito Sans',sans-serif;color:var(--blue);text-decoration:none}
+.about{display:grid;grid-template-columns:150px 1fr;gap:14px}
+.about img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:6px}
+@media(max-width:520px){.about{grid-template-columns:1fr}}
+.btn{display:inline-block;background:var(--navy);color:#fff;padding:9px 18px;border-radius:6px;text-decoration:none;font-weight:700;border:0;cursor:pointer}
+.btn.line{background:#fff;color:var(--navy);border:1px solid var(--navy)}
+.btn.sm{padding:5px 12px;font-size:.85rem}
+.btn.red{background:#fff;color:#b3261e;border:1px solid #b3261e}
+.item{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);align-items:flex-start}
+.item:last-child{border:0}
+.ic{flex:none;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.2rem}
+.item h4{font:700 1rem 'Nunito Sans','Noto Naskh Arabic',sans-serif;color:var(--navy)}
+.item h4 a{text-decoration:none}
+.item small{color:var(--muted);display:block}
+.item p{margin:2px 0 0;font-size:.92rem}
+.ql{background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.ql h2{background:var(--navy);color:#fff;padding:12px 16px;font-size:1.25rem;margin:0;display:block}
+.ql a{display:flex;gap:12px;align-items:center;padding:11px 16px;text-decoration:none;border-bottom:1px solid var(--line);font-weight:600}
+.ql a:last-child{border:0}.ql a:hover{background:var(--bg)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px}
+.page{padding:26px 0 40px}
+.page>h1{color:var(--navy);font-size:clamp(1.6rem,4vw,2.3rem);margin-bottom:14px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:5px 14px;cursor:pointer;font-weight:600;text-decoration:none;font-size:.9rem}
+.chip.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.ctl{display:inline-flex;gap:6px;margin-inline-start:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
+.photo{background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.photo img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;cursor:zoom-in}
+.photo div{padding:8px 12px;font-size:.92rem}
+.video iframe{width:100%;aspect-ratio:16/9;border:0;border-radius:10px;background:#000}
+.essay{max-width:72ch;font-size:1.1rem;line-height:1.9}
+.essay p{margin:0 0 1em;white-space:pre-wrap}
+.pages{display:grid;gap:12px;margin-top:10px}
+.pages canvas{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:6px}
+.empty{padding:26px;text-align:center;color:var(--muted);background:#fff;border:1px dashed var(--line);border-radius:10px}
+.tagb{font-size:.72rem;background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:1px 8px;margin-inline-end:6px;color:var(--muted)}
+footer{background:var(--navy);color:#d7e2f3;text-align:center;padding:16px;font-size:.9rem}
+footer a{color:#fff}
+.soc{display:flex;gap:10px;justify-content:center;margin-top:6px}
+
+/* dialogs */
+dialog{border:0;border-radius:14px;padding:22px;width:min(94vw,460px);color:var(--ink)}
+dialog::backdrop{background:rgba(0,0,0,.55)}
+dialog h2{font-size:1.2rem;margin-bottom:10px}
+dialog label{display:block;font-weight:600;font-size:.9rem;margin-top:10px}
+dialog input[type=text],dialog input[type=password],dialog input[type=date],dialog input[type=url],dialog select,dialog textarea{display:block;width:100%;margin-top:4px;padding:9px 11px;border:1px solid var(--line);border-radius:8px;background:#fff}
+dialog input[type=file]{display:block;margin-top:4px;max-width:100%}
+dialog textarea{min-height:90px}
+#formBody{max-height:60vh;overflow:auto;padding-bottom:4px}
+.err{color:#b3261e;min-height:1.3em;font-size:.9rem;margin:6px 0}
+.dact{display:flex;gap:8px;margin-top:12px}
+.thumbs{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.th{width:120px;display:grid;gap:4px;font-size:.8rem}
+.th img{width:100%;height:80px;object-fit:cover;border-radius:6px}
+#lb{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;align-items:center;justify-content:center;flex-direction:column;z-index:60;padding:16px;color:#fff;cursor:zoom-out}
+#lb img{max-width:100%;max-height:82vh;border-radius:6px}
+#toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 18px;border-radius:999px;z-index:70;max-width:90vw;text-align:center}
+#toast[hidden]{display:none}
+
+@media(max-width:900px){
+  #burger{display:block}
+  .menu{display:none;position:absolute;top:54px;left:0;right:0;background:#fff;flex-direction:column;padding:8px 16px;border-bottom:1px solid var(--line);box-shadow:0 14px 30px rgba(10,42,79,.15);max-height:75vh;overflow:auto}
+  .nav.open .menu{display:flex}
+  .sub{position:static;box-shadow:none;border:0;padding-inline-start:14px}
+  #sform{margin-inline-start:auto}#sform input{width:130px}
+  .info{display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="hd"><div class="wrap hdin">
+  <a class="id" href="#/">
+    <svg viewBox="0 0 64 72" width="58" height="64" aria-hidden="true"><path d="M32 2 58 12v24c0 16-12 28-26 34C18 64 6 52 6 36V12z" fill="#1d4ea8" stroke="#fff" stroke-width="3"/><path d="M17 27h14v22H17zM33 27h14v22H33z" fill="#fff"/><path d="M32 27v22" stroke="#1d4ea8" stroke-width="2"/><circle cx="32" cy="17" r="3.5" fill="#f7c600"/></svg>
+    <div><h1 id="sName"></h1><div class="sub" id="sSub"></div><div class="tag" id="sTag"></div></div>
+  </a>
+  <ul class="info">
+    <li>📍 <span id="iAddr"></span></li>
+    <li>📞 <span id="iPhone"></span></li>
+    <li>✉️ <span id="iMail"></span></li>
+  </ul>
+</div></header>
+
+<div class="admin" id="adminBar" hidden><div class="wrap">
+  <b>Editing</b>
+  <button onclick="heroManager()">Homepage images</button>
+  <button onclick="editHomeText()">Homepage text</button>
+  <button onclick="editDetails()">School details</button>
+  <button onclick="editMessage()">Headmaster's message</button>
+  <button onclick="signOut()">Sign out</button>
+</div></div>
+
+<nav class="nav" id="nav"><div class="wrap navin">
+  <button id="burger" aria-label="Menu">☰</button>
+  <ul class="menu" id="menu"></ul>
+  <form id="sform"><input id="sq" type="search" placeholder="Search…" aria-label="Search"></form>
+</div></nav>
+
+<main id="app"></main>
+
+<footer>
+  <div id="fName"></div>
+  <div class="soc" id="soc"></div>
+  <div style="margin-top:6px"><a href="#" id="staffLink">Staff login</a></div>
+</footer>
+
+<dialog id="authDlg">
+  <div id="loginPane">
+    <h2>Staff login</h2>
+    <label>Password<input id="aPw" type="password" autocomplete="current-password"></label>
+    <p class="err" id="authErr"></p>
+    <div class="dact"><button class="btn" id="authGo">Sign in</button><button class="btn line" id="authX">Cancel</button></div>
+    <p style="margin:12px 0 0;font-size:.9rem"><a href="#" id="toSetup">First-time setup (website owner only)</a></p>
+  </div>
+  <div id="setupPane" hidden>
+    <h2>First-time setup</h2>
+    <p class="muted" style="margin:0 0 8px">Do this once. Paste a GitHub token and choose a staff password. The token is locked with the password and saved in this website's repository. After this, staff only type the password.</p>
+    <a class="btn sm" target="_blank" rel="noopener" href="https://github.com/settings/tokens/new?scopes=public_repo&description=School%20website">Create token on GitHub</a>
+    <label>GitHub token<input id="sTok" type="password" autocomplete="off" placeholder="ghp_..."></label>
+    <label>New staff password<input id="sPw1" type="password" autocomplete="new-password"></label>
+    <label>Repeat password<input id="sPw2" type="password" autocomplete="new-password"></label>
+    <p class="muted" style="font-size:.85rem;margin:6px 0 0">At least 8 characters, not only digits, and not a phone number other people know.</p>
+    <p class="err" id="setupErr"></p>
+    <div class="dact"><button class="btn" id="setupGo">Save</button><button class="btn line" id="setupX">Back</button></div>
+  </div>
+</dialog>
+
+<dialog id="formDlg">
+  <h2 id="formTitle"></h2>
+  <div id="formBody"></div>
+  <p class="err" id="formErr"></p>
+  <div class="dact"><button class="btn" id="formSave">Save</button><button class="btn line" id="formX">Cancel</button></div>
+</dialog>
+
+<dialog id="heroDlg">
+  <h2>Homepage images</h2>
+  <p class="muted" style="margin:0">The first image is shown first. Add several to make a slideshow.</p>
+  <div class="thumbs" id="heroList"></div>
+  <label>Add or change image<input id="heroIn" type="file" accept="image/*" multiple></label>
+  <p class="err" id="heroMsg"></p>
+  <div class="dact"><button class="btn" id="heroDone">Done</button></div>
+</dialog>
+
+<div id="lb"><img id="lbImg" alt=""><div id="lbCap"></div></div>
+<div id="toast" hidden></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+/* =====================================================================
+   SETTINGS: the GitHub repository that holds this website
+   ===================================================================== */
+const CFG = { owner: 'abroaadarsh-cpu', repo: 'gbhs-gabber-massan' };
+const CLASSES = ['6', '7', '8', '9', '10'];
+const CATS = ['Result', 'Notes', 'Past Paper', 'Notice', 'Form', 'Other'];
+const MAX_PDF = 25 * 1024 * 1024;
+const GH = 'https://api.github.com', RAW = 'https://raw.githubusercontent.com';
+
+const DEFAULT = {
+  site: { name: 'GBHS Gabber Massan', subtitle: 'Government Boys High School', tagline: 'Learn • Grow • Build a Better Future',
+          address: 'Gabber Massan, Near Railway Station, Badah', phone: '+92 300 1234567', email: 'ghsgabbermassan@gmail.com', facebook: '', youtube: '' },
+  hero: { title: 'Welcome to', subtitle: 'Government Boys High School', text: 'Providing quality education, strong values and bright opportunities for a better tomorrow.', images: [] },
+  about: { text: 'GBHS Gabber Massan is a government boys high school located near the railway station in Badah area. We provide quality education from Class 6 to 10, with a focus on discipline, knowledge and character building.', image: '' },
+  message: { name: '', text: '' },
+  staff: [], news: [], images: [], videos: [], pdfs: [], essays: []
+};
+
+/* =====================================================================
+   HELPERS
+   ===================================================================== */
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+function store(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } }
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+const today = () => new Date().toISOString().slice(0, 10);
+const fmtDate = d => { try { return new Date(d + 'T00:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }); } catch (e) { return d || ''; } };
+const getP = (o, k) => k.split('.').reduce((a, x) => (a == null ? a : a[x]), o);
+function setP(o, k, v) { const p = k.split('.'); const last = p.pop(); let c = o; for (const x of p) { c = c[x] = c[x] || {}; } c[last] = v; }
+const rawUrl = p => `${RAW}/${CFG.owner}/${CFG.repo}/HEAD/${p}`;
+const assetUrl = u => /^https?:/.test(u) ? u : rawUrl(u);
+const strB64 = s => btoa(unescape(encodeURIComponent(s)));
+const b64Str = b => decodeURIComponent(escape(atob(b.replace(/\n/g, ''))));
+const toB64 = blob => new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result.split(',')[1]); r.onerror = rej; r.readAsDataURL(blob); });
+let toastTimer;
+function toast(m) { const e = $('#toast'); e.textContent = m; e.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => e.hidden = true, 4000); }
+if (typeof pdfjsLib !== 'undefined') pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+function imgBlob(file, max = 1600, q = .82) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => {
+      const im = new Image();
+      im.onload = () => {
+        const s = Math.min(1, max / Math.max(im.width, im.height));
+        const c = document.createElement('canvas'); c.width = Math.round(im.width * s); c.height = Math.round(im.height * s);
+        const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); x.drawImage(im, 0, 0, c.width, c.height);
+        c.toBlob(b => res(b), 'image/jpeg', q);
+      };
+      im.onerror = rej; im.src = r.result;
+    };
+    r.onerror = rej; r.readAsDataURL(file);
+  });
+}
+const ytId = u => { const m = String(u).match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([\w-]{11})/); return m ? m[1] : ''; };
+const COLORS = ['#10a37f', '#2f6fdb', '#7b3fc4', '#e0334c', '#0aa6a0'];
+const ICONS = ['📢', '🖼️', '🎬', '📄', '🏆'];
+
+/* =====================================================================
+   GITHUB (token = permission to edit this one repository)
+   ===================================================================== */
+let token = store('school_token') || '', canEdit = false, C = null;
+async function gh(path, opts = {}) {
+  const r = await fetch(GH + path, { ...opts, headers: { Accept: 'application/vnd.github+json', Authorization: 'Bearer ' + token, 'X-GitHub-Api-Version': '2022-11-28', ...(opts.body ? { 'Content-Type': 'application/json' } : {}) } });
+  if (!r.ok) {
+    let m = ''; try { m = (await r.json()).message; } catch (e) {}
+    if (r.status === 403 || r.status === 404) m = (m || 'Not allowed') + ' (the token needs "Contents: Read and write" for this repository)';
+    throw Object.assign(new Error(m || ('GitHub error ' + r.status)), { status: r.status });
+  }
+  return r.status === 204 ? null : r.json();
+}
+const repoPath = p => `/repos/${CFG.owner}/${CFG.repo}/contents/${p}`;
+function merge(d, s) {
+  const o = JSON.parse(JSON.stringify(d));
+  for (const k in s) { if (s[k] && typeof s[k] === 'object' && !Array.isArray(s[k]) && o[k] && typeof o[k] === 'object' && !Array.isArray(o[k])) o[k] = { ...o[k], ...s[k] }; else o[k] = s[k]; }
+  return o;
+}
+async function loadContent() {
+  try { const r = await fetch(rawUrl('data/content.json') + '?t=' + Math.floor(Date.now() / 30000)); if (r.ok) { C = merge(DEFAULT, await r.json()); return; } } catch (e) {}
+  C = merge(DEFAULT, {});
+}
+async function saveContent(msg) {
+  for (let i = 0; i < 2; i++) {
+    let sha; try { sha = (await gh(repoPath('data/content.json'))).sha; } catch (e) { if (e.status !== 404) throw e; }
+    try { await gh(repoPath('data/content.json'), { method: 'PUT', body: JSON.stringify({ message: msg || 'Update website', content: strB64(JSON.stringify(C, null, 1)), ...(sha ? { sha } : {}) }) }); return; }
+    catch (e) { if ((e.status !== 409 && e.status !== 422) || i) throw e; }
+  }
+}
+async function uploadAsset(blob, name) {
+  const path = `uploads/${uid()}-${name.replace(/[^\w.\-]+/g, '-')}`;
+  await gh(repoPath(path), { method: 'PUT', body: JSON.stringify({ message: 'Upload ' + name, content: await toB64(blob) }) });
+  return path;
+}
+async function deleteAsset(path) {
+  if (!path || /^https?:/.test(path)) return;
+  try { const j = await gh(repoPath(path)); await gh(repoPath(path), { method: 'DELETE', body: JSON.stringify({ message: 'Delete file', sha: j.sha }) }); } catch (e) {}
+}
+
+/* ----- staff login: the token is locked with a password and saved in the repo ----- */
+const TE = new TextEncoder(), TD = new TextDecoder();
+const toB = buf => btoa(String.fromCharCode(...new Uint8Array(buf)));
+const fromB = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+async function keyFrom(pw, salt, iter) {
+  const k = await crypto.subtle.importKey('raw', TE.encode(pw), 'PBKDF2', false, ['deriveKey']);
+  return crypto.subtle.deriveKey({ name: 'PBKDF2', salt, iterations: iter, hash: 'SHA-256' }, k, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
+}
+async function sealToken(tk, pw) {
+  const salt = crypto.getRandomValues(new Uint8Array(16)), iv = crypto.getRandomValues(new Uint8Array(12)), iter = 300000;
+  const ct = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, await keyFrom(pw, salt, iter), TE.encode(tk));
+  return { v: 1, iter, salt: toB(salt), iv: toB(iv), ct: toB(ct) };
+}
+async function openToken(box, pw) {
+  const pt = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: fromB(box.iv) }, await keyFrom(pw, fromB(box.salt), box.iter), fromB(box.ct));
+  return TD.decode(pt);
+}
+function openAuth() { $('#authErr').textContent = ''; $('#setupErr').textContent = ''; $('#loginPane').hidden = false; $('#setupPane').hidden = true; $('#authDlg').showModal(); }
+$('#authX').onclick = () => $('#authDlg').close();
+$('#toSetup').onclick = e => { e.preventDefault(); $('#loginPane').hidden = true; $('#setupPane').hidden = false; };
+$('#setupX').onclick = () => { $('#loginPane').hidden = false; $('#setupPane').hidden = true; };
+$('#staffLink').onclick = e => { e.preventDefault(); canEdit ? signOut() : openAuth(); };
+$('#authGo').onclick = async () => {
+  const pw = $('#aPw').value; if (!pw) return;
+  const b = $('#authGo'); b.disabled = true; $('#authErr').textContent = '';
+  try {
+    const r = await fetch(rawUrl('data/auth.json') + '?t=' + Date.now());
+    if (!r.ok) throw new Error('Login is not set up yet. Use first-time setup.');
+    let tk; try { tk = await openToken(await r.json(), pw); } catch (e) { throw new Error('Wrong password'); }
+    token = tk; await enterEdit();
+    store('school_token', tk); $('#aPw').value = ''; $('#authDlg').close(); toast('Signed in. You can now edit the website.');
+  } catch (e) { token = ''; canEdit = false; $('#authErr').textContent = e.message; }
+  finally { b.disabled = false; }
+};
+$('#setupGo').onclick = async () => {
+  const tk = $('#sTok').value.trim(), p1 = $('#sPw1').value, p2 = $('#sPw2').value, err = $('#setupErr'), b = $('#setupGo');
+  err.textContent = '';
+  if (!tk) return err.textContent = 'Paste the GitHub token';
+  if (p1.length < 8) return err.textContent = 'Password must be at least 8 characters';
+  if (/^\d+$/.test(p1)) return err.textContent = 'Password cannot be only digits. Add letters.';
+  if (p1 !== p2) return err.textContent = 'The two passwords do not match';
+  b.disabled = true; token = tk;
+  try {
+    await enterEdit();
+    const box = await sealToken(tk, p1);
+    let sha; try { sha = (await gh(repoPath('data/auth.json'))).sha; } catch (e) { if (e.status !== 404) throw e; }
+    await gh(repoPath('data/auth.json'), { method: 'PUT', body: JSON.stringify({ message: 'Set staff login', content: strB64(JSON.stringify(box)), ...(sha ? { sha } : {}) }) });
+    store('school_token', tk); $('#sTok').value = $('#sPw1').value = $('#sPw2').value = ''; $('#authDlg').close(); toast('Password login is ready. Staff only need the password now.');
+  } catch (e) { token = ''; canEdit = false; err.textContent = 'Could not save: ' + e.message; }
+  finally { b.disabled = false; }
+};
+async function enterEdit() {
+  const repo = await gh(`/repos/${CFG.owner}/${CFG.repo}`);
+  if (repo.permissions && !repo.permissions.push) throw new Error('This account cannot edit the repository.');
+  try { const j = await gh(repoPath('data/content.json')); C = merge(DEFAULT, JSON.parse(b64Str(j.content))); }
+  catch (e) { if (e.status !== 404) throw e; }
+  canEdit = true; $('#adminBar').hidden = false; $('#staffLink').textContent = 'Sign out'; route();
+}
+function signOut() { token = ''; canEdit = false; store('school_token', ''); $('#adminBar').hidden = true; $('#staffLink').textContent = 'Staff login'; route(); }
+
+/* =====================================================================
+   GENERIC FORM DIALOG
+   ===================================================================== */
+function openForm({ title, fields, data = {}, onSave }) {
+  const d = $('#formDlg');
+  $('#formTitle').textContent = title; $('#formErr').textContent = '';
+  $('#formBody').innerHTML = fields.map(f => {
+    const v = getP(data, f.k) ?? f.def ?? '';
+    const lab = esc(f.label) + (f.req ? ' *' : '');
+    if (f.type === 'textarea') return `<label>${lab}<textarea name="${f.k}" dir="auto" rows="${f.rows || 4}">${esc(v)}</textarea></label>`;
+    if (f.type === 'select') return `<label>${lab}<select name="${f.k}">${f.opts.map(o => `<option ${String(o) === String(v) ? 'selected' : ''}>${esc(o)}</option>`).join('')}</select></label>`;
+    if (f.type === 'pdf' || f.type === 'image' || f.type === 'images') return `<label>${lab}${v && f.type !== 'images' ? ' <small>(leave empty to keep the current file)</small>' : ''}<input type="file" name="${f.k}" ${f.type === 'images' ? 'multiple' : ''} accept="${f.type === 'pdf' ? 'application/pdf' : 'image/*'}"></label>`;
+    return `<label>${lab}<input type="${f.type || 'text'}" name="${f.k}" dir="auto" value="${esc(v)}"></label>`;
+  }).join('');
+  const b = $('#formSave');
+  $('#formX').onclick = () => d.close();
+  b.onclick = async () => {
+    b.disabled = true; $('#formErr').textContent = '';
+    const old = [];
+    try {
+      const out = {};
+      for (const f of fields) {
+        const el = d.querySelector(`[name="${f.k}"]`);
+        if (f.type === 'pdf' || f.type === 'image') {
+          const file = el.files[0];
+          if (file) {
+            if (f.type === 'pdf' && file.size > MAX_PDF) throw new Error('PDF is too large (max 25 MB)');
+            b.textContent = 'Uploading…';
+            out[f.k] = f.type === 'pdf' ? await uploadAsset(file, file.name) : await uploadAsset(await imgBlob(file), file.name.replace(/\.\w+$/, '') + '.jpg');
+            const prev = getP(data, f.k); if (prev) old.push(prev);
+          } else out[f.k] = getP(data, f.k) || '';
+        } else if (f.type === 'images') {
+          out[f.k] = [];
+          for (const file of el.files) { b.textContent = 'Uploading…'; out[f.k].push(await uploadAsset(await imgBlob(file), file.name.replace(/\.\w+$/, '') + '.jpg')); }
+        } else out[f.k] = el.value.trim();
+        if (f.req && (Array.isArray(out[f.k]) ? !out[f.k].length : !out[f.k])) throw new Error(f.label + ' is required');
+      }
+      b.textContent = 'Saving…';
+      await onSave(out);
+      d.close(); old.forEach(deleteAsset);
+    } catch (e) { $('#formErr').textContent = e.message; }
+    finally { b.disabled = false; b.textContent = 'Save'; }
+  };
+  d.showModal();
+}
+
+/* ----- collections the staff can fill ----- */
+const SPEC = {
+  news: { name: 'news item', fields: [{ k: 'title', label: 'Title', req: 1 }, { k: 'date', label: 'Date', type: 'date' }, { k: 'text', label: 'Details', type: 'textarea' }] },
+  pdfs: { name: 'PDF', fields: [{ k: 'title', label: 'Title', req: 1 }, { k: 'category', label: 'Category', type: 'select', opts: CATS }, { k: 'cls', label: 'Class', type: 'select', opts: ['All', ...CLASSES] }, { k: 'file', label: 'PDF file', type: 'pdf', req: 1 }, { k: 'date', label: 'Date', type: 'date' }] },
+  essays: { name: 'essay', fields: [{ k: 'title', label: 'Title', req: 1 }, { k: 'author', label: 'Written by' }, { k: 'cls', label: 'Class', type: 'select', opts: ['All', ...CLASSES] }, { k: 'date', label: 'Date', type: 'date' }, { k: 'body', label: 'Essay text', type: 'textarea', rows: 12, req: 1 }] },
+  videos: { name: 'video', fields: [{ k: 'title', label: 'Title', req: 1 }, { k: 'url', label: 'YouTube link', type: 'url', req: 1 }] },
+  staff: { name: 'teacher', fields: [{ k: 'name', label: 'Name', req: 1 }, { k: 'role', label: 'Subject or position' }] },
+  images: { name: 'photo', fields: [{ k: 'caption', label: 'Caption' }] }
+};
+function addItem(col, pre = {}) {
+  const sp = SPEC[col];
+  openForm({ title: 'Add ' + sp.name, fields: sp.fields, data: { date: today(), ...pre }, onSave: async v => {
+    if (col === 'videos' && !ytId(v.url)) throw new Error('Please paste a YouTube link');
+    v.id = uid(); col === 'staff' ? C[col].push(v) : C[col].unshift(v);
+    await saveContent('Add ' + sp.name); route();
+  } });
+}
+function editItem(col, id) {
+  const it = C[col].find(x => x.id === id); if (!it) return;
+  openForm({ title: 'Edit ' + SPEC[col].name, fields: SPEC[col].fields, data: it, onSave: async v => {
+    if (col === 'videos' && !ytId(v.url)) throw new Error('Please paste a YouTube link');
+    Object.assign(it, v); await saveContent('Edit ' + SPEC[col].name); route();
+  } });
+}
+async function delItem(col, id) {
+  if (!confirm('Delete this ' + SPEC[col].name + '?')) return;
+  const it = C[col].find(x => x.id === id); C[col] = C[col].filter(x => x.id !== id);
+  try { await saveContent('Delete ' + SPEC[col].name); if (it && it.file) deleteAsset(it.file); route(); } catch (e) { toast(e.message); }
+}
+function addPhotos() {
+  openForm({ title: 'Add photos', fields: [{ k: 'files', label: 'Choose photos', type: 'images', req: 1 }, { k: 'caption', label: 'Caption (optional)' }], onSave: async v => {
+    v.files.slice().reverse().forEach(f => C.images.unshift({ id: uid(), file: f, caption: v.caption, date: today() }));
+    await saveContent('Add photos'); route();
+  } });
+}
+const ctl = (col, id) => canEdit ? `<span class="ctl"><button class="btn line sm" onclick="editItem('${col}','${id}')">Edit</button><button class="btn red sm" onclick="delItem('${col}','${id}')">Delete</button></span>` : '';
+const addBtn = (label, js) => canEdit ? `<button class="btn" onclick="${js}">+ ${label}</button>` : '';
+
+/* ----- site settings forms ----- */
+function settingsForm(title, fields) {
+  openForm({ title, fields, data: C, onSave: async v => { for (const k in v) setP(C, k, v[k]); await saveContent('Update ' + title); renderChrome(); route(); } });
+}
+const editHomeText = () => settingsForm('Homepage text', [
+  { k: 'hero.title', label: 'Small heading (e.g. Welcome to)' }, { k: 'hero.subtitle', label: 'Gold heading' }, { k: 'hero.text', label: 'Short text', type: 'textarea' },
+  { k: 'about.text', label: 'About the school', type: 'textarea', rows: 6 }, { k: 'about.image', label: 'About photo', type: 'image' }]);
+const editDetails = () => settingsForm('School details', [
+  { k: 'site.name', label: 'School name', req: 1 }, { k: 'site.subtitle', label: 'Type of school' }, { k: 'site.tagline', label: 'Motto' },
+  { k: 'site.address', label: 'Address' }, { k: 'site.phone', label: 'Phone' }, { k: 'site.email', label: 'Email' },
+  { k: 'site.facebook', label: 'Facebook link', type: 'url' }, { k: 'site.youtube', label: 'YouTube channel link', type: 'url' }]);
+const editMessage = () => settingsForm("Headmaster's message", [
+  { k: 'message.name', label: 'Headmaster name' }, { k: 'message.text', label: 'Message', type: 'textarea', rows: 10 }]);
+
+/* ----- homepage image manager ----- */
+function heroManager() { renderHeroList(); $('#heroMsg').textContent = ''; $('#heroDlg').showModal(); }
+function renderHeroList() {
+  $('#heroList').innerHTML = C.hero.images.length ? C.hero.images.map((p, i) => `<div class="th"><img src="${esc(assetUrl(p))}" alt="">
+    ${i ? `<button class="btn line sm" onclick="heroUp(${i})">Move first</button>` : '<small>First image</small>'}
+    <button class="btn red sm" onclick="heroDel(${i})">Remove</button></div>`).join('') : '<p class="muted">No image yet. Add one below.</p>';
+}
+$('#heroDone').onclick = () => { $('#heroDlg').close(); route(); };
+$('#heroIn').onchange = async e => {
+  const files = [...e.target.files]; if (!files.length) return;
+  try {
+    for (const f of files) { $('#heroMsg').textContent = 'Uploading…'; C.hero.images.push(await uploadAsset(await imgBlob(f, 1920, .85), f.name.replace(/\.\w+$/, '') + '.jpg')); }
+    $('#heroMsg').textContent = 'Saving…'; await saveContent('Update homepage images'); $('#heroMsg').textContent = 'Saved.'; renderHeroList();
+  } catch (err) { $('#heroMsg').textContent = err.message; }
+  e.target.value = '';
+};
+async function heroUp(i) { const x = C.hero.images.splice(i, 1)[0]; C.hero.images.unshift(x); await heroSave(); }
+async function heroDel(i) { const x = C.hero.images.splice(i, 1)[0]; await heroSave(); deleteAsset(x); }
+async function heroSave() { try { await saveContent('Update homepage images'); renderHeroList(); } catch (e) { $('#heroMsg').textContent = e.message; } }
+
+/* =====================================================================
+   PAGE CHROME (header, menu, footer)
+   ===================================================================== */
+const MENU = [
+  { l: 'Home', h: '#/' },
+  { l: 'About Us', k: 'about', sub: [['About School', '#/about'], ["Headmaster's Message", '#/message'], ['Our Teachers', '#/teachers']] },
+  { l: 'Images', h: '#/images', k: 'images' }, { l: 'Videos', h: '#/videos', k: 'videos' },
+  { l: 'Results', k: 'results', sub: [['All Results', '#/results'], ...CLASSES.map(c => ['Class ' + c, '#/results/' + c])] },
+  { l: 'Students', k: 'students', sub: CLASSES.map(c => ['Class ' + c, '#/students/' + c]) },
+  { l: 'News & Updates', h: '#/news', k: 'news' }, { l: 'PDFs', h: '#/pdfs', k: 'pdfs' }, { l: 'Essays', h: '#/essays', k: 'essays' }, { l: 'Contact', h: '#/contact', k: 'contact' }
+];
+function buildMenu() {
+  $('#menu').innerHTML = MENU.map((m, i) => m.sub
+    ? `<li data-k="${m.k}"><button type="button" data-i="${i}">${m.l}</button><ul class="sub">${m.sub.map(s => `<li><a href="${s[1]}">${s[0]}</a></li>`).join('')}</ul></li>`
+    : `<li data-k="${m.k || 'home'}"><a href="${m.h}">${m.l}</a></li>`).join('');
+}
+$('#menu').addEventListener('click', e => {
+  const b = e.target.closest('button[data-i]');
+  if (b) { const li = b.parentElement, was = li.classList.contains('open'); closeMenus(); if (!was) li.classList.add('open'); e.stopPropagation(); }
+});
+document.addEventListener('click', e => { if (!e.target.closest('#menu')) closeMenus(); });
+function closeMenus() { document.querySelectorAll('#menu li.open').forEach(x => x.classList.remove('open')); }
+$('#burger').onclick = () => $('#nav').classList.toggle('open');
+$('#sform').onsubmit = e => { e.preventDefault(); const q = $('#sq').value.trim(); if (q) location.hash = '#/search/' + encodeURIComponent(q); };
+function renderChrome() {
+  const s = C.site;
+  document.title = s.name;
+  $('#sName').textContent = s.name; $('#sSub').textContent = s.subtitle; $('#sTag').textContent = s.tagline;
+  $('#iAddr').textContent = s.address; $('#iPhone').textContent = s.phone; $('#iMail').textContent = s.email;
+  $('#fName').textContent = `${s.name}  |  ${s.subtitle}  |  Educate • Empower • Excel`;
+  $('#soc').innerHTML = (s.facebook ? `<a href="${esc(s.facebook)}" target="_blank" rel="noopener">Facebook</a>` : '') + (s.youtube ? `<a href="${esc(s.youtube)}" target="_blank" rel="noopener">YouTube</a>` : '');
+}
+
+/* =====================================================================
+   ROUTER AND PAGES
+   ===================================================================== */
+let heroTimer, pdfCat = 'All', essCls = 'All';
+const app = () => $('#app');
+const page = (title, html) => { app().innerHTML = `<div class="wrap page"><h1>${esc(title)}</h1>${html}</div>`; };
+const empty = t => `<div class="empty">${t}</div>`;
+function route() {
+  clearInterval(heroTimer); closeMenus(); $('#nav').classList.remove('open'); window.scrollTo(0, 0);
+  const [, a, b] = (location.hash.replace(/^#/, '') || '/').split('/');
+  const pages = {
+    '': vHome, about: vAbout, message: vMessage, teachers: vTeachers, images: vImages, videos: vVideos,
+    results: () => vResults(b), students: () => vStudents(b), news: () => b ? vNewsItem(b) : vNews(),
+    pdfs: vPdfs, pdf: () => vPdf(b), essays: vEssays, essay: () => vEssay(b), contact: vContact, search: () => vSearch(decodeURIComponent(b || ''))
+  };
+  (pages[a || ''] || vHome)();
+  const key = ({ '': 'home', pdf: 'pdfs', essay: 'essays', teachers: 'about', message: 'about' })[a || ''] || a;
+  document.querySelectorAll('#menu > li').forEach(li => { const on = li.dataset.k === key; const el = li.firstElementChild; el.classList.toggle('on', on); });
+}
+window.addEventListener('hashchange', route);
+
+/* ----- items used on several pages ----- */
+const newsRow = (n, i) => `<div class="item"><div class="ic" style="background:${COLORS[i % 5]}">${ICONS[i % 5]}</div><div style="flex:1"><h4><a href="#/news/${n.id}">${esc(n.title)}</a></h4><small>${fmtDate(n.date)}</small><p>${esc((n.text || '').slice(0, 110))}${(n.text || '').length > 110 ? '…' : ''}</p></div>${ctl('news', n.id)}</div>`;
+const pdfRow = p => `<div class="item"><div class="ic" style="background:#e0334c">📄</div><div style="flex:1"><h4><a href="#/pdf/${p.id}">${esc(p.title)}</a></h4><small><span class="tagb">${esc(p.category)}</span>${p.cls && p.cls !== 'All' ? 'Class ' + esc(p.cls) + ' · ' : ''}${fmtDate(p.date)}</small></div>${ctl('pdfs', p.id)}</div>`;
+const essayRow = e => `<div class="item"><div class="ic" style="background:#7b3fc4">✍️</div><div style="flex:1"><h4><a href="#/essay/${e.id}">${esc(e.title)}</a></h4><small>${e.author ? esc(e.author) + ' · ' : ''}${e.cls && e.cls !== 'All' ? 'Class ' + esc(e.cls) + ' · ' : ''}${fmtDate(e.date)}</small><p dir="auto">${esc((e.body || '').slice(0, 110))}…</p></div>${ctl('essays', e.id)}</div>`;
+const chips = (arr, cur, fn) => `<div class="row">${arr.map(x => `<button class="chip ${String(x) === String(cur) ? 'on' : ''}" onclick="${fn}('${x}')">${x === 'All' ? 'All' : (CLASSES.includes(x) ? 'Class ' + x : x)}</button>`).join('')}</div>`;
+
+/* ----- home ----- */
+function vHome() {
+  const h = C.hero, s = C.site, imgs = h.images;
+  const slides = imgs.length ? imgs.map((p, i) => `<div class="slide ${i ? '' : 'on'}" style="background-image:url('${esc(assetUrl(p))}')"></div>`).join('') : '<div class="slide on ph"></div>';
+  const aboutImg = C.about.image || imgs[0];
+  const feats = [['🎓', 'Quality Education', 'Better Learning', '#2f6fdb'], ['👥', 'Skilled Teachers', 'Guiding Future', '#10a37f'], ['📖', 'Modern Facilities', 'For Your Growth', '#7b3fc4'], ['⭐', 'Discipline & Character', 'Building Good Citizens', '#e0334c'], ['🏆', 'Bright Future', 'Our Goal', '#0aa6a0']];
+  app().innerHTML = `
+  <section class="hero">${slides}<div class="shade"></div>
+    <div class="wrap hc"><p class="w">${esc(h.title)}</p><h2>${esc(s.name)}</h2><h3>${esc(h.subtitle)}</h3><p class="t">${esc(h.text)}</p><a class="gold" href="#/about">Learn More →</a>
+      ${canEdit ? '<p><button class="gold" onclick="heroManager()">📷 Change homepage image</button></p>' : ''}</div>
+    ${imgs.length > 1 ? `<button class="arrow l" onclick="slide(-1)" aria-label="Previous">‹</button><button class="arrow r" onclick="slide(1)" aria-label="Next">›</button><div class="dots">${imgs.map((_, i) => `<i class="${i ? '' : 'on'}"></i>`).join('')}</div>` : ''}
+  </section>
+  <section class="feat"><div class="wrap">${feats.map(f => `<div class="f"><div class="c" style="background:${f[3]}">${f[0]}</div><b>${f[1]}</b><span>${f[2]}</span></div>`).join('')}</div></section>
+  <div class="wrap">
+    <div class="cols">
+      <section class="sec"><h2>About Our School</h2><div class="about">${aboutImg ? `<img src="${esc(assetUrl(aboutImg))}" alt="">` : '<div></div>'}<div><p style="margin:0 0 12px" dir="auto">${esc(C.about.text)}</p><a class="btn" href="#/about">Read More →</a></div></div></section>
+      <section class="sec"><h2>Latest News &amp; Updates <a href="#/news">View All →</a></h2>${C.news.length ? C.news.slice(0, 3).map(newsRow).join('') : empty('No news yet.')}</section>
+      <section class="ql"><h2>Quick Links</h2>
+        <a href="#/images">🖼️ Images</a><a href="#/videos">▶️ Videos</a><a href="#/results">📄 Results</a><a href="#/students/6">👥 Class 6 – 10</a><a href="#/pdfs">📚 PDFs</a><a href="#/essays">✍️ Essays</a><a href="#/contact">✉️ Contact Us</a></section>
+    </div>
+    <div class="cols2">
+      <section class="sec"><h2>Latest Essays <a href="#/essays">View All →</a></h2>${C.essays.length ? C.essays.slice(0, 3).map(essayRow).join('') : empty('No essays yet.')}</section>
+      <section class="sec"><h2>Latest PDFs <a href="#/pdfs">View All →</a></h2>${C.pdfs.length ? C.pdfs.slice(0, 3).map(pdfRow).join('') : empty('No PDFs yet.')}</section>
+    </div>
+  </div>`;
+  if (imgs.length > 1) heroTimer = setInterval(() => slide(1), 5000);
+}
+function slide(d) {
+  const sl = [...document.querySelectorAll('.slide')], dots = [...document.querySelectorAll('.dots i')];
+  if (sl.length < 2) return;
+  let i = sl.findIndex(x => x.classList.contains('on')); sl[i].classList.remove('on'); if (dots[i]) dots[i].classList.remove('on');
+  i = (i + d + sl.length) % sl.length; sl[i].classList.add('on'); if (dots[i]) dots[i].classList.add('on');
+}
+
+/* ----- about, message, teachers ----- */
+function vAbout() {
+  const img = C.about.image || C.hero.images[0];
+  page('About Our School', `<div class="card">${img ? `<img src="${esc(assetUrl(img))}" alt="" style="max-width:100%;border-radius:8px;margin-bottom:12px">` : ''}<p dir="auto" style="white-space:pre-wrap;margin:0">${esc(C.about.text)}</p></div>${canEdit ? '<p><button class="btn" onclick="editHomeText()">Edit</button></p>' : ''}`);
+}
+function vMessage() {
+  const m = C.message;
+  page("Headmaster's Message", m.text ? `<div class="card essay"><p dir="auto">${esc(m.text)}</p>${m.name ? `<p><b>${esc(m.name)}</b><br><span class="muted">Headmaster</span></p>` : ''}</div>${canEdit ? '<p><button class="btn" onclick="editMessage()">Edit</button></p>' : ''}`
+    : empty("The headmaster's message will appear here.") + (canEdit ? '<p><button class="btn" onclick="editMessage()">Write message</button></p>' : ''));
+}
+function vTeachers() {
+  page('Our Teachers', `<div class="row">${addBtn('Add teacher', "addItem('staff')")}</div>` + (C.staff.length ? `<div class="grid">${C.staff.map(s => `<div class="card"><h4 dir="auto">${esc(s.name)}</h4><p class="muted" style="margin:2px 0 8px" dir="auto">${esc(s.role)}</p>${ctl('staff', s.id)}</div>`).join('')}</div>` : empty('Teachers will be listed here.')));
+}
+
+/* ----- images and videos ----- */
+function vImages() {
+  page('Images', `<div class="row">${addBtn('Add photos', 'addPhotos()')}</div>` + (C.images.length ? `<div class="grid">${C.images.map(p => `<div class="photo"><img loading="lazy" src="${esc(assetUrl(p.file))}" alt="${esc(p.caption)}" onclick="openLb('${esc(assetUrl(p.file))}','${esc((p.caption || '').replace(/'/g, ''))}')"><div dir="auto">${esc(p.caption)}${ctl('images', p.id)}</div></div>`).join('')}</div>` : empty('No photos yet.')));
+}
+function openLb(u, c) { $('#lbImg').src = u; $('#lbCap').textContent = c; $('#lb').style.display = 'flex'; }
+$('#lb').onclick = () => $('#lb').style.display = 'none';
+function vVideos() {
+  page('Videos', `<div class="row">${addBtn('Add video', "addItem('videos')")}</div>` + (C.videos.length ? `<div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(300px,1fr))">${C.videos.map(v => `<div class="video"><iframe loading="lazy" allowfullscreen src="https://www.youtube-nocookie.com/embed/${ytId(v.url)}" title="${esc(v.title)}"></iframe><h4 dir="auto" style="margin:8px 0">${esc(v.title)}</h4>${ctl('videos', v.id)}</div>`).join('')}</div>` : empty('No videos yet.')));
+}
+
+/* ----- results and students (by class) ----- */
+function vResults(cls) {
+  const list = C.pdfs.filter(p => p.category === 'Result' && (!cls || String(p.cls) === cls || p.cls === 'All'));
+  page(cls ? 'Results: Class ' + cls : 'Results', `<div class="row">${['All', ...CLASSES].map(c => `<a class="chip ${(c === 'All' ? !cls : c === cls) ? 'on' : ''}" href="#/results${c === 'All' ? '' : '/' + c}">${c === 'All' ? 'All' : 'Class ' + c}</a>`).join('')}</div>
+    <div class="row">${addBtn('Add result PDF', `addItem('pdfs',{category:'Result',cls:'${cls || 'All'}'})`)}</div>` + (list.length ? `<div class="card">${list.map(pdfRow).join('')}</div>` : empty('No results yet.')));
+}
+function vStudents(cls) {
+  cls = CLASSES.includes(cls) ? cls : '6';
+  const pdfs = C.pdfs.filter(p => String(p.cls) === cls || p.cls === 'All'), ess = C.essays.filter(e => String(e.cls) === cls || e.cls === 'All');
+  page('Class ' + cls, `<div class="row">${CLASSES.map(c => `<a class="chip ${c === cls ? 'on' : ''}" href="#/students/${c}">Class ${c}</a>`).join('')}</div>
+    <div class="cols2" style="padding:0">
+      <section class="sec"><h2>PDFs</h2><div class="row">${addBtn('Add PDF', `addItem('pdfs',{cls:'${cls}'})`)}</div>${pdfs.length ? `<div class="card">${pdfs.map(pdfRow).join('')}</div>` : empty('No PDFs for this class yet.')}</section>
+      <section class="sec"><h2>Essays</h2><div class="row">${addBtn('Add essay', `addItem('essays',{cls:'${cls}'})`)}</div>${ess.length ? `<div class="card">${ess.map(essayRow).join('')}</div>` : empty('No essays for this class yet.')}</section>
+    </div>`);
+}
+
+/* ----- news ----- */
+function vNews() { page('News & Updates', `<div class="row">${addBtn('Add news', "addItem('news')")}</div>` + (C.news.length ? `<div class="card">${C.news.map(newsRow).join('')}</div>` : empty('No news yet.'))); }
+function vNewsItem(id) {
+  const n = C.news.find(x => x.id === id); if (!n) return page('News', empty('Not found.'));
+  page(n.title, `<p class="muted">${fmtDate(n.date)}</p><div class="card essay"><p dir="auto">${esc(n.text)}</p></div><p><a class="btn line" href="#/news">← All news</a></p>`);
+}
+
+/* ----- PDFs ----- */
+function setCat(c) { pdfCat = c; vPdfs(); }
+function vPdfs() {
+  const list = C.pdfs.filter(p => pdfCat === 'All' || p.category === pdfCat);
+  page('PDFs', chips(['All', ...CATS], pdfCat, 'setCat') + `<div class="row">${addBtn('Add PDF', "addItem('pdfs')")}</div>` + (list.length ? `<div class="card">${list.map(pdfRow).join('')}</div>` : empty('No PDFs here yet.')));
+}
+var _buf = null;
+async function vPdf(id) {
+  const p = C.pdfs.find(x => x.id === id); if (!p) return page('PDF', empty('Not found.'));
+  _buf = null;
+  page(p.title, `<p class="muted"><span class="tagb">${esc(p.category)}</span>${p.cls && p.cls !== 'All' ? 'Class ' + esc(p.cls) + ' · ' : ''}${fmtDate(p.date)}</p>
+    <div class="row"><a class="btn" href="${esc(assetUrl(p.file))}" target="_blank" rel="noopener">Open</a><button class="btn line" id="dlBtn">Download</button><a class="btn line" href="#/pdfs">← All PDFs</a></div>
+    <div id="pages" class="pages"><p class="muted">Loading…</p></div><p><button class="btn line" id="moreBtn" hidden>Show more pages</button></p>`);
+  $('#dlBtn').onclick = () => {
+    if (!_buf) return window.open(assetUrl(p.file), '_blank');
+    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([_buf], { type: 'application/pdf' })); a.download = (p.title || 'file').replace(/[^\w\u0600-\u06FF\- ]+/g, '') + '.pdf'; a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+  };
+  try {
+    const r = await fetch(assetUrl(p.file)); if (!r.ok) throw new Error('File not found');
+    _buf = await r.arrayBuffer();
+    const box = $('#pages'), more = $('#moreBtn'); if (!box) return;
+    const doc = await pdfjsLib.getDocument({ data: new Uint8Array(_buf.slice(0)) }).promise;
+    box.innerHTML = ''; let next = 1;
+    const batch = async () => {
+      more.hidden = true; const end = Math.min(doc.numPages, next + 7);
+      for (; next <= end; next++) {
+        const pg = await doc.getPage(next), dpr = Math.min(2, window.devicePixelRatio || 1);
+        const vp = pg.getViewport({ scale: ((box.clientWidth || 600) / pg.getViewport({ scale: 1 }).width) * dpr });
+        const c = document.createElement('canvas'); c.width = vp.width; c.height = vp.height; box.appendChild(c);
+        await pg.render({ canvasContext: c.getContext('2d'), viewport: vp }).promise;
+      }
+      more.hidden = next > doc.numPages;
+    };
+    more.onclick = batch; await batch();
+  } catch (e) { if ($('#pages')) $('#pages').innerHTML = `<p class="err">${esc(e.message)}. A new file can take a minute to appear.</p>`; }
+}
+
+/* ----- essays ----- */
+function setEss(c) { essCls = c; vEssays(); }
+function vEssays() {
+  const list = C.essays.filter(e => essCls === 'All' || String(e.cls) === essCls || e.cls === 'All');
+  page('Essays', chips(['All', ...CLASSES], essCls, 'setEss') + `<div class="row">${addBtn('Write essay', "addItem('essays')")}</div>` + (list.length ? `<div class="card">${list.map(essayRow).join('')}</div>` : empty('No essays here yet.')));
+}
+function vEssay(id) {
+  const e = C.essays.find(x => x.id === id); if (!e) return page('Essay', empty('Not found.'));
+  page(e.title, `<p class="muted">${e.author ? esc(e.author) + ' · ' : ''}${e.cls && e.cls !== 'All' ? 'Class ' + esc(e.cls) + ' · ' : ''}${fmtDate(e.date)}</p>
+    <div class="card essay" dir="auto">${(e.body || '').split(/\n{2,}/).map(p => `<p dir="auto">${esc(p)}</p>`).join('')}</div>
+    <div class="row" style="margin-top:12px"><button class="btn line" onclick="window.print()">Print</button><a class="btn line" href="#/essays">← All essays</a></div>`);
+}
+
+/* ----- contact and search ----- */
+function vContact() {
+  const s = C.site;
+  page('Contact', `<div class="card"><p>📍 ${esc(s.address)}</p><p>📞 <a href="tel:${esc(s.phone.replace(/\s/g, ''))}">${esc(s.phone)}</a></p><p>✉️ <a href="mailto:${esc(s.email)}">${esc(s.email)}</a></p>
+    <a class="btn" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(s.address)}">Open in Maps</a></div>${canEdit ? '<p><button class="btn" onclick="editDetails()">Edit school details</button></p>' : ''}`);
+}
+function vSearch(q) {
+  const k = q.toLowerCase(), has = (...a) => a.some(x => String(x || '').toLowerCase().includes(k));
+  const out = [];
+  C.news.filter(n => has(n.title, n.text)).forEach(n => out.push(newsRow(n, 0)));
+  C.pdfs.filter(p => has(p.title, p.category)).forEach(p => out.push(pdfRow(p)));
+  C.essays.filter(e => has(e.title, e.author, e.body)).forEach(e => out.push(essayRow(e)));
+  C.videos.filter(v => has(v.title)).forEach(v => out.push(`<div class="item"><div class="ic" style="background:#2f6fdb">▶️</div><div><h4><a href="#/videos">${esc(v.title)}</a></h4><small>Video</small></div></div>`));
+  C.images.filter(p => has(p.caption)).forEach(p => out.push(`<div class="item"><div class="ic" style="background:#10a37f">🖼️</div><div><h4><a href="#/images">${esc(p.caption)}</a></h4><small>Photo</small></div></div>`));
+  C.staff.filter(s => has(s.name, s.role)).forEach(s => out.push(`<div class="item"><div class="ic" style="background:#0aa6a0">👤</div><div><h4><a href="#/teachers">${esc(s.name)}</a></h4><small>${esc(s.role)}</small></div></div>`));
+  page('Search: ' + q, out.length ? `<div class="card">${out.join('')}</div>` : empty('Nothing found.'));
+}
+
+/* =====================================================================
+   START
+   ===================================================================== */
+(async function start() {
+  buildMenu();
+  await loadContent();
+  renderChrome();
+  route();
+  if (token) { try { await enterEdit(); } catch (e) { token = ''; store('school_token', ''); } }
+})();
+</script>
+</body>
+</html>
